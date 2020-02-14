@@ -15,6 +15,49 @@
  */
 #include QMK_KEYBOARD_H
 
+enum custom_keycodes {
+  SEMI_ENT = SAFE_RANGE,
+  SPUL,
+  UMLAUT_U
+};
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  
+  if (record->event.pressed) {
+    switch (keycode) {
+      
+      case SEMI_ENT:
+          // when keycode QMKBEST is pressed
+          SEND_STRING(";"SS_TAP(X_ENT));
+          return false;
+
+      case SPUL:
+          // when keycode QMKURL is pressed
+          SEND_STRING("Sp"SS_DOWN(X_RALT));
+          SEND_STRING(SS_TAP(X_KP_0));
+          SEND_STRING(SS_TAP(X_KP_2));
+          SEND_STRING(SS_TAP(X_KP_5));
+          SEND_STRING(SS_TAP(X_KP_2));
+          SEND_STRING(SS_UP(X_RALT)"l");
+          return false;
+          
+      case UMLAUT_U:
+          // when keycode QMKURL is pressed
+          SEND_STRING(SS_DOWN(X_RALT));
+          SEND_STRING(SS_TAP(X_KP_0));
+          SEND_STRING(SS_TAP(X_KP_2));
+          SEND_STRING(SS_TAP(X_KP_5));
+          SEND_STRING(SS_TAP(X_KP_2));
+          SEND_STRING(SS_UP(X_RALT));
+          return false;
+        }
+  }
+  return true;
+};
+
+
+
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   /* Qwerty
    * ,-----------------------------------------------------------------------------------------.
@@ -43,9 +86,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    * |-----------------------------------------------------------------------------------------+
    * |        |     | Up  |     |     |     |     |     |     |     |PrtSc|ScrLk|Pause|        |
    * |-----------------------------------------------------------------------------------------+
-   * |         |Left |Down |Right|     |     |      |     |     |     | Ins |PgUp |            |
+   * |         |Left |Down |Right|     |     |      |     |     |     | Ins |PgUp |  ;+Enter   |
    * |-----------------------------------------------------------------------------------------+
-   * |           |VolUp|VolDn|VolMu|     |     |     |     |     |     |PgDn |      HOME       |
+   * |           |VolUp|VolDn|VolMu|     |     |     |  SPUL |     |     |PgDn |      HOME       |
    * |-----------------------------------------------------------------------------------------+
    * |       |       |       |                                 |       |  L2   |       |  END  |
    * `-----------------------------------------------------------------------------------------'
@@ -53,8 +96,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [1] = LAYOUT_60_split(
     KC_GRV, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, KC_DEL,
     KC_TRNS, KC_TRNS, KC_UP, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_PSCR, KC_SLCK, KC_PAUS, KC_TRNS,
-    KC_TRNS, KC_LEFT, KC_DOWN, KC_RGHT, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_INS, KC_PGUP, KC_TRNS,
-    KC_TRNS, KC_VOLU, KC_VOLD, KC_MUTE, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_PGDN, KC_HOME,
+    KC_TRNS, KC_LEFT, KC_DOWN, KC_RGHT, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_INS, KC_PGUP, SEMI_ENT,
+    KC_TRNS, KC_VOLU, KC_VOLD, KC_MUTE, KC_TRNS, KC_TRNS, UMLAUT_U, SPUL, KC_TRNS, KC_TRNS, KC_PGDN, KC_HOME,
     KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, MO(2), KC_TRNS, KC_END
   ),
 
